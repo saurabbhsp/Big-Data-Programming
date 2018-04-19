@@ -36,7 +36,7 @@ def scatter(data, root):
     # request.Wait()
     return data
  ```
-The above method accepts data to be sent to all processors and root processor which is sending the data. The data is then  broken into chunks depending on the processor count.
+The above method accepts data to be sent to all processors and root processor which is sending the data. The data is then  broken into chunks depending on the processor count.<br /><br /><br /><br />
 ### 2.2. Gather
 ```python
 def gather(data, root):
