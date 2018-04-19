@@ -83,7 +83,7 @@ vecB = scatter(vectorB, root)
 vecC = vecA + vecB
 vectorC = gather(vecC, root)
 ```
-
+<br/><br/>
 #### 3.1 Performanace
 | Vector Size        | Processors           | Execution Time (Including data generation time)|
 | ------------- |:-------------:| -----:|
