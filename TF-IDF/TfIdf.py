@@ -75,11 +75,11 @@ def generateIDF(documentFrequency, totalDocuments):
 		inverseDocumentFrequency[token] = math.log((totalDocuments * 1.0)/documentFrequency[token])
 	return inverseDocumentFrequency
 
-def generateTfIdf(termFrequency, inverseDocumentFrequency):
+def generateTfIdf(termFrequency, inverseDocumentFrequency, metaData):
 	tfidf = {}
 
 	for token in termFrequency:
-		tfidf[token] = termFrequency[token] * inverseDocumentFrequency[token]
+		tfidf[metaData["dictionary"][token]] = termFrequency[token] * inverseDocumentFrequency[token]
 	return tfidf
 
 def wordgramGenerator(tokens, n, stopWords = []):
@@ -120,6 +120,7 @@ pathList = None
 termFrequencies = []
 documentFrequency = {}
 inverseDocumentFrequency = None
+metaData = None
 
 """Only root will execute the following code to generate possible inputs paths.
 These input paths will be stored on a list. This list is
@@ -172,24 +173,32 @@ relativeDocumentFrequencies = comm.gather(documentFrequency, root)
 if currentRank == root:
 
 	documentFrequency = {}
+	metaData = {}
+	metaData["dictionary"] = {}
+	vectorCount = 0
 	totalDocuments = len(pathList)
+
 	for relativeDocumentFrequency in relativeDocumentFrequencies:
 		for token in relativeDocumentFrequency:
 			if token in documentFrequency:
 				documentFrequency[token] = documentFrequency[token] + relativeDocumentFrequency[token]
 			else:
 				documentFrequency[token] = relativeDocumentFrequency[token]
-
+				metaData["dictionary"][token] = vectorCount
+				vectorCount+=1
+	metaData["vocabLength"] = vectorCount
 	inverseDocumentFrequency = generateIDF(documentFrequency, totalDocuments)
-
+	writeToFile(os.path.join(outputPath, "metadata.json"), json.dumps(metaData, indent=2))
+	writeToFile(os.path.join(outputPath, "IDF.json"), json.dumps(inverseDocumentFrequency, indent=2))
 
 """Broadcast the idf to every node"""
 inverseDocumentFrequency = comm.bcast(inverseDocumentFrequency, root)
+metaData = comm.bcast(metaData, root)
 
 
 """Calculate tfidf"""
 for termFrequency, file in zip(termFrequencies, inputFiles):
-	tfidf = generateTfIdf(termFrequency, inverseDocumentFrequency)
+	tfidf = generateTfIdf(termFrequency, inverseDocumentFrequency, metaData)
 	writeToFile(os.path.join(outputPath, "TFIDF",os.path.basename(file)+".json"), json.dumps(tfidf, indent=2))
 
 
