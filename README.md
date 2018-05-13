@@ -1,5 +1,4 @@
 # Big-Data-Programming
-[license](https://github.com/saurabbhsp/Big-Data-Programming/blob/master/LICENSE) <br/>
 This is repository for big data programming
 
 ## Table of contents
