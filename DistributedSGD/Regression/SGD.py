@@ -96,5 +96,5 @@ def calculatePSGD(featureSet, targetSet, trainingIndices, beta, learningRate, ma
 					print("Converged")
 					return beta
 		prevRMSE = RMSE
-		#print("RMSE "+str(RMSE))
+		print("RMSE "+str(RMSE))
 	return beta

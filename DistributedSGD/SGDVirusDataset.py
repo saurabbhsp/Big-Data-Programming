@@ -53,6 +53,7 @@ modelParams = comm.bcast(modelParams, root)
 
 """Min max scaler"""
 features = Preprocessing.distributedMaxScaler(features, comm, root)
+
 #modelParams = SGD.calculatePSGD(features, target, trainSetIndices, modelParams, 
 #	1e-10, maxEpochs, communicator = comm)
 startTime = MPI.Wtime()

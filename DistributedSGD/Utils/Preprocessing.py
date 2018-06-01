@@ -45,5 +45,5 @@ def distributedMinMaxScaler(data, communicator = None, root = None):
 		maximum = communicator.bcast(globalMaximum, root)
 		minimum = communicator.bcast(globalMinimum, root)
 
-	scaledData = (data - minimum)/(maximum - minimum + 1)
+	scaledData = (data - minimum)/(maximum - minimum)
 	return scaledData
