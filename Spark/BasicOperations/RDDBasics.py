@@ -9,13 +9,14 @@ a = ["spark", "rdd", "python",
      "context", "create", "class"]
 b = ["operation", "apache", "scala", "lambda",
      "parallel", "partition"]
-rdd_a = sc.parallelize((value, 1) for key, value in enumerate(a))
-rdd_b = sc.parallelize((value, 1) for key, value in enumerate(b))
-
+# rdd_a = sc.parallelize((value, 1) for key, value in enumerate(a))
+# rdd_b = sc.parallelize((value, 1) for key, value in enumerate(b))
+rdd_a = sc.parallelize(a)
+rdd_b = sc.parallelize(b)
 
 """right outer join"""
 """Collect should not be used on real data set."""
-result = rdd_a.rightOuterJoin(rdd_b)
+result = rdd_a.rightOuterJoin(rdd_b).map(lambda x: (x[0]+x[1][0], x[0]+x[1][1]))
 print(result.collect())
 """full outer join"""
 result = rdd_a.fullOuterJoin(rdd_b)
